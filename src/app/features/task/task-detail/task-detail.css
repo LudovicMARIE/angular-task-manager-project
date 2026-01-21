@@ -1,0 +1,92 @@
+/* TaskDetail component - minimal valid CSS to clear diagnostics */
+
+.task-detail {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.task-card {
+  background: #ffffff;
+  border: 1px solid #e6eef6;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.04);
+}
+
+.title {
+  color: #4f46e5;
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  word-break: break-word;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.status-pending {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-in-progress {
+  background-color: #fffbeb;
+  color: #92400e;
+}
+
+.status-done {
+  background-color: #ecfccb;
+  color: #14532d;
+}
+
+.description {
+  margin-top: 0.75rem;
+  color: #374151;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.meta {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #f8fafc;
+}
+
+@media (max-width: 640px) {
+  .task-card {
+    padding: 0.75rem;
+  }
+  .actions {
+    justify-content: center;
+  }
+}
