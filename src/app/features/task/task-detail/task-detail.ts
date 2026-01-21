@@ -1,13 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommentsList } from '../comments-list';
 import { Status, Tasks } from '../interfaces/tasks';
 import { TaskStatusPipe } from '../pipe/task-status-pipe';
 import { TaskService } from '../services/taskService';
 
 @Component({
+  standalone: true,
   selector: 'app-task-detail',
-  imports: [RouterLink, TaskStatusPipe, DatePipe],
+  imports: [RouterLink, TaskStatusPipe, DatePipe, CommentsList],
   templateUrl: './task-detail.html',
   styleUrl: './task-detail.css',
 })

@@ -1,0 +1,64 @@
+<div class="mt-6 mx-auto max-w-3xl">
+  <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <header class="mb-4 flex items-center justify-between">
+      <h3 class="text-lg font-semibold text-slate-700">Commentaires</h3>
+      <p class="text-sm text-slate-500">Partagez vos retours avec l'équipe</p>
+    </header>
+
+    <!-- Formulaire d'envoi -->
+    <form [formGroup]="commentForm" (ngSubmit)="submit()" class="mb-6">
+      <label for="message" class="sr-only">Message</label>
+      <div class="flex gap-2">
+        <textarea
+          id="message"
+          formControlName="message"
+          rows="3"
+          class="w-full resize-none rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          placeholder="Écrire un commentaire..."
+        ></textarea>
+
+        <div class="flex items-end">
+          <button
+            type="submit"
+            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+            [disabled]="commentForm.invalid"
+          >
+            Envoyer
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Liste des commentaires -->
+    <ng-container *ngIf="comments().length === 0; else commentsList">
+      <div class="rounded-md border border-dashed border-slate-200 p-4 text-center text-slate-500">
+        Aucun commentaire pour le moment.
+      </div>
+    </ng-container>
+
+    <ng-template #commentsList>
+      <ul class="space-y-4">
+        <li *ngFor="let c of comments(); trackBy: trackByDate" class="flex gap-3">
+          <div class="flex-shrink-0">
+            <div
+              class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium"
+            >
+              {{ c.author?.charAt(0)?.toUpperCase() }}
+            </div>
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between">
+              <div class="text-sm">
+                <span class="font-medium text-slate-800">{{ c.author }}</span>
+                <span class="ml-2 text-xs text-slate-500">• {{ formatDate(c.date) }}</span>
+              </div>
+            </div>
+
+            <p class="mt-1 text-sm text-slate-700 whitespace-pre-wrap">{{ c.message }}</p>
+          </div>
+        </li>
+      </ul>
+    </ng-template>
+  </section>
+</div>
