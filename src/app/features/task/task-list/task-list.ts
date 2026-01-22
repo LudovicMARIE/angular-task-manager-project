@@ -58,4 +58,16 @@ export class TaskList implements OnInit {
     }
   }
 
+  deleteTask(id: number): void {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+      return;
+    }
+
+    this.taskService.deleteTask(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+      this.tasks.update((tasks) => tasks.filter((t) => t.id !== id));
+    });
+  }
+
 }
