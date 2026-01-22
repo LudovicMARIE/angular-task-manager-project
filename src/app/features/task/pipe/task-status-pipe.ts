@@ -11,7 +11,7 @@ export class TaskStatusPipe implements PipeTransform {
     switch (value) {
       case Status.PENDING: return 'A faire'
       case Status.IN_PROGRESS: return 'En cours'
-      case Status.DONE: return 'Terminé'
+      case Status.DONE: return 'Terminée'
       default: return 'Inconnu'
     }
   }

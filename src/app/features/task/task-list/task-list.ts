@@ -1,13 +1,18 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { Status, Tasks } from '../interfaces/tasks';
-import { TaskStatusPipe } from '../pipe/task-status-pipe';
-import { TaskService } from '../services/taskService';
+import {Component, DestroyRef, inject, OnInit, signal, computed} from '@angular/core';
+import {RouterLink} from '@angular/router';
+import {TaskService} from '../services/taskService';
+import {Status, Tasks} from '../interfaces/tasks';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TaskStatusPipe} from '../pipe/task-status-pipe';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-task-list',
-  imports: [RouterLink, TaskStatusPipe],
+  imports: [
+    RouterLink,
+    TaskStatusPipe,
+    DatePipe
+  ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',
 })
@@ -15,7 +20,15 @@ export class TaskList implements OnInit {
   private taskService: TaskService = inject(TaskService);
   private destroyRef = inject(DestroyRef);
 
-  tasks = signal<Tasks[]>([]);
+  tasks = signal<Tasks[]>([])
+  filter = signal<'ALL' | 'PENDING' | 'DONE'>('ALL');
+
+  filteredTasks = computed(() => {
+    const filter = this.filter();
+    const tasks = this.tasks();
+    if (filter === 'ALL') return tasks;
+    return tasks.filter(task => task.status === filter);
+  });
 
   ngOnInit() {
     this.getTasks();
@@ -57,4 +70,17 @@ export class TaskList implements OnInit {
         return 'bg-red-100 text-red-800';
     }
   }
+
+  deleteTask(id: number): void {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+      return;
+    }
+
+    this.taskService.deleteTask(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+      this.tasks.update((tasks) => tasks.filter((t) => t.id !== id));
+    });
+  }
+
 }

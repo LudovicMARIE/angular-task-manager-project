@@ -1,11 +1,11 @@
-import {Component, inject, OnInit, signal, WritableSignal, Input} from '@angular/core';
-import {AuthService} from '../../../core/auth/services/auth-service';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Tasks} from '../interfaces/tasks';
-import {TaskService} from '../services/taskService';
-import {Router, RouterLink} from '@angular/router';
-import {UsersService} from '../../users/users-service';
-import {User} from '../../../core/auth/interfaces/user';
+import { Component, inject, OnInit, signal, WritableSignal, Input } from '@angular/core';
+import { AuthService } from '../../../core/auth/services/auth-service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Tasks } from '../interfaces/tasks';
+import { TaskService } from '../services/taskService';
+import { Router, RouterLink } from '@angular/router';
+import { UsersService } from '../../users/users-service';
+import { User } from '../../../core/auth/interfaces/user';
 
 @Component({
   selector: 'app-task-form',
@@ -16,7 +16,7 @@ import {User} from '../../../core/auth/interfaces/user';
   templateUrl: './task-form.html',
   styleUrl: './task-form.css',
 })
-export class TaskForm implements OnInit{
+export class TaskForm implements OnInit {
   protected authService: AuthService = inject(AuthService)
   private fb = inject(FormBuilder)
   private taskService = inject(TaskService)
@@ -25,8 +25,9 @@ export class TaskForm implements OnInit{
 
 
   users: WritableSignal<User[]> = signal<User[]>([])
+  errorMessage = signal('')
 
-  @Input() id?:string;
+  @Input() id?: string;
 
 
   ngOnInit() {
@@ -40,7 +41,7 @@ export class TaskForm implements OnInit{
     if (this.id) {
       this.taskService.getTaskById(+this.id).subscribe({
         next: (task: Tasks) => {
-          const taskData = {...task, targetUserId: task.user?.id ? task.user.id.toString() : null}
+          const taskData = { ...task, targetUserId: task.user?.id ? task.user.id.toString() : null }
           this.tasksForm.patchValue(taskData)
         },
         error: () => console.log('error')
@@ -51,12 +52,28 @@ export class TaskForm implements OnInit{
   tasksForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
-    targetUserId: [null as string | null]
+    targetUserId: [null as string | null, Validators.required]
   })
 
+  get title() {
+    return this.tasksForm.get('title');
+  }
+
+  get description() {
+    return this.tasksForm.get('description');
+  }
+
+  get targetUserId() {
+    return this.tasksForm.get('targetUserId');
+  }
 
   onSubmit() {
-    const task :Tasks = this.tasksForm.getRawValue()
+    if (this.tasksForm.invalid) {
+      this.tasksForm.markAllAsTouched();
+      return;
+    }
+
+    const task: Tasks = this.tasksForm.getRawValue()
     if (this.id) {
       this.taskService.updateTask(+this.id, task).subscribe({
         next: () => this.router.navigate(['/tasks']),
@@ -67,7 +84,7 @@ export class TaskForm implements OnInit{
         next: () => {
           this.router.navigate(['/tasks'])
         },
-        error: () => console.log('error')
+        error: (err) => this.errorMessage.set(err.error.message)
       })
     }
 
