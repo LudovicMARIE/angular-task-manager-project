@@ -4,12 +4,14 @@ import {TaskService} from '../services/taskService';
 import {Status, Tasks} from '../interfaces/tasks';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {TaskStatusPipe} from '../pipe/task-status-pipe';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-task-list',
   imports: [
     RouterLink,
-    TaskStatusPipe
+    TaskStatusPipe,
+    DatePipe
   ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',

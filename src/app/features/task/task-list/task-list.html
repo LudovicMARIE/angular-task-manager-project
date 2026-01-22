@@ -47,6 +47,10 @@
                 </svg>
                 <span>Assignée à: {{ task.user?.username }}</span>
               </div>
+              <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
+                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+              </div>
             </div>
             <div class="flex flex-col gap-1">
               <button [routerLink]="['/edit', task.id]" type="button"
@@ -110,6 +114,10 @@
                 </svg>
                 <span>Assignée à: {{ task.user?.username }}</span>
               </div>
+              <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
+                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+              </div>
             </div>
             <div class="flex flex-col gap-1">
               <button [routerLink]="['/edit', task.id]" type="button"
@@ -172,6 +180,10 @@
                     d="M15.59 14.37A4.5 4.5 0 1 0 9 20.25h6.75M12 7.5v9" />
                 </svg>
                 <span>Assignée à: {{ task.user?.username }}</span>
+              </div>
+              <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
+                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
               </div>
             </div>
             <div class="flex flex-col gap-1">
