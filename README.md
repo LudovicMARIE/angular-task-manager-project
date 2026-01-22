@@ -123,7 +123,7 @@ src/
 
 ```bash
 # Cloner le repository
-git clone <url-du-repo>
+git clone https://github.com/LudovicMARIE/angular-task-manager-project
 
 # Installer les dépendances
 cd angular-task-manager-project
