@@ -2,10 +2,22 @@
   <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
       <h1 class="text-2xl font-bold tracking-tight text-slate-900">Mes tâches</h1>
-      <p class="mt-1 text-sm text-slate-500">Chaque tâche affiche uniquement son titre, sa description et la personne
-        assignée.</p>
     </div>
     <div class="flex items-center gap-2">
+      <div class="flex bg-slate-100 rounded-lg p-1 mr-2">
+        <button (click)="filter.set('ALL')" class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          [class]="filter() === 'ALL' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'">
+          Toutes
+        </button>
+        <button (click)="filter.set('PENDING')" class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          [class]="filter() === 'PENDING' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'">
+          À faire
+        </button>
+        <button (click)="filter.set('DONE')" class="px-3 py-1.5 text-sm font-medium rounded-md transition-all"
+          [class]="filter() === 'DONE' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'">
+          Terminées
+        </button>
+      </div>
       <button [routerLink]="['/create']" type="button"
         class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
@@ -17,18 +29,19 @@
     </div>
   </div>
 
-  @if (tasks().length === 0) {
+  @if (filteredTasks().length === 0) {
   <div class="mt-10 text-center text-sm text-slate-500">Aucune tâche à afficher</div>
   } @else {
-  <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+  <div [class]="filter() === 'ALL' ? 'grid grid-cols-1 gap-6 md:grid-cols-3' : 'grid grid-cols-1 gap-6'">
     <!-- À faire -->
+    @if (filter() === 'ALL' || filter() === 'PENDING') {
     <div class="flex flex-col gap-4">
       <h2 class="font-semibold text-slate-900 flex items-center gap-2">
         <span class="h-2 w-2 rounded-full bg-slate-500"></span>
         À faire
       </h2>
       <ul class="flex flex-col gap-4 peer">
-        @for (task of tasks(); track task.id) {
+        @for (task of filteredTasks(); track task.id) {
         @if (task.status === 'PENDING') {
         <li class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
           <div class="flex items-start justify-between gap-3">
@@ -48,8 +61,8 @@
                 <span>Assignée à: {{ task.user?.username }}</span>
               </div>
               <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
-                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
-                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Créée le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifiée le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
               </div>
             </div>
             <div class="flex flex-col gap-1">
@@ -87,15 +100,17 @@
       </ul>
       <p class="hidden text-sm text-slate-500 italic peer-[:not(:has(li))]:block">Pas de tâche à commencer</p>
     </div>
+    }
 
     <!-- En cours -->
+    @if (filter() === 'ALL') {
     <div class="flex flex-col gap-4">
       <h2 class="font-semibold text-slate-900 flex items-center gap-2">
         <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
         En cours
       </h2>
       <ul class="flex flex-col gap-4 peer">
-        @for (task of tasks(); track task.id) {
+        @for (task of filteredTasks(); track task.id) {
         @if (task.status === 'IN_PROGRESS') {
         <li class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
           <div class="flex items-start justify-between gap-3">
@@ -115,8 +130,8 @@
                 <span>Assignée à: {{ task.user?.username }}</span>
               </div>
               <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
-                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
-                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Créée le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifiée le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
               </div>
             </div>
             <div class="flex flex-col gap-1">
@@ -154,21 +169,24 @@
       </ul>
       <p class="hidden text-sm text-slate-500 italic peer-[:not(:has(li))]:block">Pas de tâche en cours</p>
     </div>
+    }
 
     <!-- Terminé -->
+    @if (filter() === 'ALL' || filter() === 'DONE') {
     <div class="flex flex-col gap-4">
       <h2 class="font-semibold text-slate-900 flex items-center gap-2">
         <span class="h-2 w-2 rounded-full bg-green-500"></span>
-        Terminé
+        Terminées
       </h2>
       <ul class="flex flex-col gap-4 peer">
-        @for (task of tasks(); track task.id) {
+        @for (task of filteredTasks(); track task.id) {
         @if (task.status === 'DONE') {
         <li class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2">
-                <h3 class="truncate text-base font-semibold text-black" [class.line-through]="task.status === 'DONE'"> {{task.title}} </h3>
+                <h3 class="truncate text-base font-semibold text-black" [class.line-through]="task.status === 'DONE'">
+                  {{task.title}} </h3>
                 <span class="inline-flex items-center rounded-full  px-2.5 py-0.5 text-xs font-medium "
                   [class]="getStatusColor(task.status)"> {{task.status | taskStatus }} </span>
               </div>
@@ -182,8 +200,8 @@
                 <span>Assignée à: {{ task.user?.username }}</span>
               </div>
               <div class="mt-2 flex flex-col gap-0.5 text-xs text-slate-400">
-                <span>Créé le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
-                <span>Modifié le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Créée le {{ task.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+                <span>Modifiée le {{ task.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</span>
               </div>
             </div>
             <div class="flex flex-col gap-1">
@@ -212,6 +230,7 @@
       </ul>
       <p class="hidden text-sm text-slate-500 italic peer-[:not(:has(li))]:block">Pas de tâche terminée</p>
     </div>
+    }
   </div>
   }
 </div>

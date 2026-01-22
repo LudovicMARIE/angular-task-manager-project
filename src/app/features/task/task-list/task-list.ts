@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, signal, computed} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {TaskService} from '../services/taskService';
 import {Status, Tasks} from '../interfaces/tasks';
@@ -21,6 +21,14 @@ export class TaskList implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   tasks = signal<Tasks[]>([])
+  filter = signal<'ALL' | 'PENDING' | 'DONE'>('ALL');
+
+  filteredTasks = computed(() => {
+    const filter = this.filter();
+    const tasks = this.tasks();
+    if (filter === 'ALL') return tasks;
+    return tasks.filter(task => task.status === filter);
+  });
 
   ngOnInit() {
     this.getTasks()
