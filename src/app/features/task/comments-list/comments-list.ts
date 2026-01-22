@@ -72,7 +72,7 @@ export class CommentsList {
     }
   }
 
-  // trackBy function for *ngFor to optimize rendering and to be used as a trackBy function in templates
+  // trackBy function for @for to optimize rendering and to be used as a trackBy function in templates
   // Returns a stable identifier for each comment (we use the ISO date string).
   trackByDate(_index: number, item: CommentItem) {
     return item.date;

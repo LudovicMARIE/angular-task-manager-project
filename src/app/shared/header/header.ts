@@ -24,4 +24,8 @@ export class Header {
   btnHome() {
     this.router.navigate(['/']);
   }
+
+  btnAdmin() {
+    this.router.navigate(['/users']);
+  }
 }

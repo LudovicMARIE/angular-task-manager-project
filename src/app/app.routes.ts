@@ -6,6 +6,8 @@ import { authGuard } from './core/auth/guards/auth-guard';
 import { TaskForm } from './features/task/task-form/task-form';
 import { Dashboard } from './features/dashboard/dashboard';
 import { TaskDetail } from './features/task/task-detail/task-detail';
+import { ComponentAdmin } from './features/admin/component-admin/component-admin';
+import { adminGuards } from './core/auth/guards/admin-guards-guard';
 
 export const routes: Routes = [
   { path: 'register', component: Register },
@@ -16,4 +18,5 @@ export const routes: Routes = [
   { path: 'create', component: TaskForm, canActivate: [authGuard] },
   { path: '', redirectTo: '/tasks', pathMatch: 'full' },
   { path: 'edit/:id', component: TaskForm, canActivate: [authGuard] },
+  { path: 'users', component: ComponentAdmin, canActivate: [authGuard, adminGuards] },
 ];
